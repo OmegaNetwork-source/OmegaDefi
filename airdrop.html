@@ -4,211 +4,1965 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Omega Airdrop Tool</title>
-  <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <style>
-    body {
-      background: #fff;
-      color: #111;
-      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    :root {
+      /* Enhanced Monochrome Base Colors */
+      --primary-color: #000000;
+      --primary-dark: #1a1a1a;
+      --secondary-color: #2d2d2d;
+      --accent-color: #4a4a4a;
+      
+      /* Sharp Monochrome Accents */
+      --accent-light: #f8f8f8;
+      --accent-medium: #b0b0b0;
+      --accent-dark: #2a2a2a;
+      
+      /* Enhanced Status Colors */
+      --success-color: #1a472a;
+      --error-color: #7f1d1d;
+      --warning-color: #78350f;
+      --info-color: #1e3a8a;
+      
+      /* Sharp Text Colors */
+      --text-primary: #0a0a0a;
+      --text-secondary: #2d2d2d;
+      --text-light: #4a4a4a;
+      --text-muted: #6b7280;
+      --text-inverse: #ffffff;
+      --text-highlight: #000000;
+      
+      /* Enhanced Background Colors */
+      --bg-primary: #ffffff;
+      --bg-secondary: #fafafa;
+      --bg-tertiary: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --bg-dark: #000000;
+      --bg-card: #ffffff;
+      --bg-input: #ffffff;
+      
+      /* Sharp Border Colors */
+      --border-color: #d1d5db;
+      --border-focus: #000000;
+      --border-light: #e5e7eb;
+      --border-dark: #374151;
+      --border-accent: #9ca3af;
+      
+      /* Enhanced Shadow System */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      
+      /* Sharp Gradients */
+      --gradient-primary: linear-gradient(135deg, #000000 0%, #2d2d2d 50%, #4a4a4a 100%);
+      --gradient-secondary: linear-gradient(135deg, #4a4a4a 0%, #6b7280 50%, #9ca3af 100%);
+      --gradient-accent: linear-gradient(135deg, #f8f8f8 0%, #f3f4f6 50%, #e5e7eb 100%);
+      --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #374151 100%);
+      --gradient-light: linear-gradient(135deg, #ffffff 0%, #fafafa 50%, #f3f4f6 100%);
+      --gradient-text: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
+    }
+
+    [data-theme="dark"] {
+      /* Sharp Dark Mode Colors */
+      --text-primary: #ffffff;
+      --text-secondary: #e5e7eb;
+      --text-light: #d1d5db;
+      --text-muted: #9ca3af;
+      --text-inverse: #000000;
+      --text-highlight: #ffffff;
+      
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-tertiary: #1f2937;
+      --bg-elevated: #374151;
+      --bg-dark: #ffffff;
+      --bg-card: #1f2937;
+      --bg-input: #374151;
+      
+      --border-color: #4b5563;
+      --border-focus: #ffffff;
+      --border-light: #374151;
+      --border-dark: #e5e7eb;
+      --border-accent: #6b7280;
+      
+      /* Enhanced shadows for dark mode */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -1px rgb(0 0 0 / 0.2);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 10px 10px -5px rgb(0 0 0 / 0.2);
+      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+      
+      /* Sharp Dark Gradients */
+      --gradient-primary: linear-gradient(135deg, #ffffff 0%, #e5e7eb 50%, #d1d5db 100%);
+      --gradient-secondary: linear-gradient(135deg, #9ca3af 0%, #6b7280 50%, #4b5563 100%);
+      --gradient-accent: linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%);
+      --gradient-dark: linear-gradient(135deg, #6b7280 0%, #4b5563 50%, #374151 100%);
+      --gradient-light: linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%);
+      --gradient-text: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+    }
+
+    /* Dark Mode Status Colors */
+    [data-theme="dark"] .status-success {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      color: #6ee7b7;
+      border-color: #10b981;
+    }
+
+    [data-theme="dark"] .status-success::before {
+      background: #10b981;
+    }
+
+    [data-theme="dark"] .status-error {
+      background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+      color: #fca5a5;
+      border-color: #ef4444;
+    }
+
+    [data-theme="dark"] .status-error::before {
+      background: #ef4444;
+    }
+
+    [data-theme="dark"] .status-info {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: #93c5fd;
+      border-color: #3b82f6;
+    }
+
+    [data-theme="dark"] .status-info::before {
+      background: #3b82f6;
+    }
+
+    [data-theme="dark"] .status-warning {
+      background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+      color: #fcd34d;
+      border-color: #f59e0b;
+    }
+
+    [data-theme="dark"] .status-warning::before {
+      background: #f59e0b;
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      margin: 0;
+      padding: 0;
     }
-    .airdrop-container {
-      max-width: 480px;
-      margin: 3rem auto 2rem auto;
-      background: #fff;
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
-      padding: 2.5rem 2rem 2rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      align-items: center;
-    }
-    .airdrop-title {
+
+    .hero-section {
+      background: var(--gradient-primary);
+      color: var(--text-inverse);
+      padding: 3rem 2rem;
       text-align: center;
-      font-size: 2.1rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.04em;
+      position: relative;
+      overflow: hidden;
     }
-    .connection-toggle {
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
-      background: #f5f5f5;
-      border-radius: 0.8rem;
-      padding: 0.3rem;
-      margin-bottom: 1rem;
-      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
     }
-    .toggle-btn {
-      flex: 1;
-      padding: 0.7rem 1rem;
-      border: none;
-      background: transparent;
-      border-radius: 0.6rem;
+
+    .hero-title {
+      text-align: left;
+    }
+
+    .hero-title h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .omega-logo {
+      font-size: 4rem;
+      font-weight: 900;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      transition: all 0.3s ease;
+      display: inline-block;
+      line-height: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .omega-logo:hover {
+      transform: scale(1.1) rotate(5deg);
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    [data-theme="dark"] .omega-logo {
+      filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.2));
+    }
+
+    [data-theme="dark"] .omega-logo:hover {
+      filter: drop-shadow(0 6px 12px rgba(255, 255, 255, 0.3));
+    }
+
+    .hero-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin: 0.5rem 0 0 0;
+      opacity: 0.9;
+    }
+
+    .hero-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .hero-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.75rem;
+      color: var(--text-inverse);
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
     }
-    .toggle-btn.active {
-      background: #111;
-      color: #fff;
+
+    .hero-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
     }
-    .airdrop-label {
-      font-size: 1.05rem;
-      font-weight: 500;
-      margin-bottom: 0.3rem;
-      color: #333;
+
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
     }
-    .airdrop-input, .airdrop-textarea {
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-medium);
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient-accent);
+      border-radius: 0.75rem;
+    }
+
+    .stat-content {
+      flex: 1;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .main-workspace {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .workspace-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .workspace-right {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .connection-panel,
+    .token-panel,
+    .recipients-panel,
+    .execution-panel {
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-color);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .connection-panel:hover,
+    .token-panel:hover,
+    .recipients-panel:hover,
+    .execution-panel:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-medium);
+    }
+
+    .panel-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input,
+    .form-textarea {
       width: 100%;
-      font-size: 1.1rem;
-      padding: 0.7rem 1rem;
-      border: 1.5px solid #111;
-      border-radius: 0.8rem;
-      margin-bottom: 1.1rem;
-      background: #fafbfc;
-      color: #111;
+      font-size: 1rem;
+      padding: 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .btn-connect {
+      background: var(--gradient-secondary);
+      color: var(--text-inverse);
+      width: 100%;
+    }
+
+    .btn-connect:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-execute {
+      background: var(--gradient-primary);
+      color: var(--text-inverse);
+      font-size: 1.25rem;
+      padding: 1.5rem 3rem;
+      width: 100%;
+      border-radius: 1rem;
+      font-weight: 700;
+    }
+
+    .btn-execute:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 600px;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .logo-svg {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      transition: all 0.3s ease;
+      display: inline-block;
+      line-height: 1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-svg:hover {
+      transform: scale(1.1) rotate(5deg);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    [data-theme="dark"] .logo-svg {
+      filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1));
+    }
+
+    [data-theme="dark"] .logo-svg:hover {
+      filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.2));
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .airdrop-container {
+      max-width: 600px;
+      width: 100%;
+      background: var(--bg-primary);
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-xl);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .connection-toggle {
+      display: flex;
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      padding: 0.25rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      border: 1px solid var(--border-color);
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      background: transparent;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--text-secondary);
+    }
+
+    .toggle-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .toggle-btn.active {
+      background: var(--gradient-primary);
+      color: var(--text-inverse);
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.875rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       resize: none;
     }
-    .airdrop-textarea {
-      min-height: 90px;
-      max-height: 200px;
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+      background: var(--bg-input);
     }
-    .airdrop-btn {
-      width: 100%;
-      background: #111;
-      color: #fff;
-      border: none;
+
+    [data-theme="dark"] .form-input:focus, 
+    [data-theme="dark"] .form-textarea:focus {
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      max-height: 300px;
+    }
+
+    .form-input::placeholder, .form-textarea::placeholder {
+      color: var(--text-light);
+    }
+
+    .wallet-info, .private-key-info {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
       border-radius: 1rem;
-      font-size: 1.2rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .wallet-status {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .balance-info {
+      background: var(--gradient-accent);
+      border: 2px solid var(--accent-light);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-info::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-primary);
+    }
+
+    .balance-info.show {
+      display: block;
+    }
+
+    .balance-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .balance-label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .balance-value {
       font-weight: 700;
-      padding: 1rem;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      transition: opacity 0.2s;
-      opacity: 1;
+      color: var(--primary-color);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
-    .airdrop-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+
+    .btn {
+      width: 100%;
+      background: var(--gradient-primary);
+      color: var(--text-inverse);
+      border: none;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
     }
-    .airdrop-status {
-      margin-top: 1.2rem;
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn {
+      border-radius: 1rem;
       font-size: 1.1rem;
+      font-weight: 700;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg-secondary);
+      border-color: var(--text-secondary);
+    }
+
+    .file-upload {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-upload input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .file-upload-label {
+      display: block;
+      padding: 0.875rem 1rem;
+      background: var(--bg-secondary);
+      border: 2px dashed var(--border-color);
+      border-radius: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .file-upload-label:hover {
+      border-color: var(--primary-color);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .airdrop-status {
+      margin-top: 1.5rem;
+      font-size: 1rem;
       text-align: center;
       min-height: 1.5em;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5em;
+      gap: 0.5rem;
       flex-wrap: wrap;
-    }
-    .airdrop-upload {
-      margin-bottom: 1.1rem;
-      width: 100%;
-    }
-    .wallet-info {
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 0.8rem;
       padding: 1rem;
-      margin-bottom: 1rem;
-      width: 100%;
+      border-radius: 0.75rem;
+      font-weight: 500;
     }
-    .balance-info {
-      background: #f0f8ff;
-      border: 1px solid #b3d9ff;
-      border-radius: 0.8rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
+
+    .status-success {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      color: #166534;
+      border: 2px solid #22c55e;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .status-success::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #22c55e;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .status-error {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #991b1b;
+      border: 2px solid #ef4444;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .status-error::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #ef4444;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .status-info {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      color: #1e40af;
+      border: 2px solid #3b82f6;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .status-info::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #3b82f6;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .status-warning {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border: 2px solid #f59e0b;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .status-warning::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #f59e0b;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .progress-container {
       width: 100%;
+      margin-top: 1rem;
       display: none;
     }
-    .balance-info.show {
-      display: block;
-    }
-    .footer {
-      text-align: center;
-      color: #aaa;
-      font-size: 0.95rem;
-      margin: 2.5rem 0 1rem 0;
-    }
+
     .progress-bar {
       width: 100%;
       height: 8px;
-      background: #f0f0f0;
+      background: var(--bg-tertiary);
       border-radius: 4px;
       overflow: hidden;
-      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
     }
+
     .progress-fill {
       height: 100%;
-      background: #1ca64c;
+      background: var(--gradient-primary);
       width: 0%;
-      transition: width 0.3s;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
-    @media (max-width: 600px) {
-      .airdrop-container {
-        padding: 1.2rem 0.5rem;
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .progress-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-top: 3rem;
+      padding: 1rem;
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: var(--accent-color);
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.5rem;
+    }
+
+    @media (max-width: 1200px) {
+      .main-workspace {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
       }
-      .airdrop-title {
+      
+      .workspace-left {
+        order: 2;
+      }
+      
+      .workspace-right {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 1rem;
+      }
+      
+      .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      
+      .hero-title {
+        text-align: center;
+      }
+      
+      .hero-title h1 {
+        font-size: 2.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .omega-logo {
+        font-size: 3rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      
+      .dashboard {
+        padding: 1rem;
+      }
+      
+      .stats-bar {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .stat-card {
+        padding: 1rem;
+      }
+      
+      .stat-number {
         font-size: 1.5rem;
+      }
+      
+      .stat-icon {
+        font-size: 1.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      
+      .connection-panel,
+      .token-panel,
+      .recipients-panel,
+      .execution-panel {
+        padding: 1.5rem;
+      }
+      
+      .panel-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+      
+      .panel-actions {
+        justify-content: center;
+      }
+      
+      .action-btn {
+        flex: 1;
+        justify-content: center;
+      }
+      
+      .btn-execute {
+        font-size: 1.1rem;
+        padding: 1.25rem 2rem;
+      }
+    }
+
+    /* Header Controls */
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .logo-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 1.5rem;
+      background: var(--gradient-accent);
+      border-radius: 1rem;
+      border: 2px solid var(--accent-light);
+    }
+
+    .stat-item {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 2rem;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sidebar-section {
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-title::before {
+      content: '';
+      width: 4px;
+      height: 1.5rem;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .content-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .content-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-color);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .action-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-color: var(--accent-medium);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .input-section {
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .execution-section {
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: var(--text-inverse);
+      font-size: 1.25rem;
+      padding: 1.25rem 2.5rem;
+      border-radius: 1rem;
+      font-weight: 700;
+      min-width: 200px;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .utility-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+    }
+
+    .utility-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-color: var(--primary-color);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .utility-btn:active {
+      transform: translateY(0);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-color: var(--primary-color);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .theme-toggle:active {
+      transform: translateY(0);
+    }
+
+    .theme-toggle .moon-icon {
+      display: none;
+    }
+
+    [data-theme="dark"] .theme-toggle .sun-icon {
+      display: none;
+    }
+
+    [data-theme="dark"] .theme-toggle .moon-icon {
+      display: block;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    /* How to Use Steps */
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      background: var(--gradient-primary);
+      color: var(--text-inverse);
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-number::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0.5rem;
+      height: 0.5rem;
+      background: var(--text-inverse);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.2;
+    }
+
+    .step-content h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .step-content p {
+      margin: 0;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .warning-box {
+      background: var(--gradient-accent);
+      border: 2px solid var(--accent-medium);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      color: var(--text-primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .warning-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-dark);
+    }
+
+    /* Disclaimer Styles */
+    .disclaimer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .disclaimer-section h4 {
+      margin: 0 0 0.75rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .disclaimer-section p {
+      margin: 0 0 0.5rem 0;
+      color: var(--text-secondary);
+    }
+
+    .disclaimer-section ul {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .disclaimer-section li {
+      margin-bottom: 0.25rem;
+    }
+
+    .disclaimer-footer {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .disclaimer-footer p {
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 480px) {
+      .airdrop-container {
+        padding: 1.5rem 1rem;
+      }
+      
+      .logo {
+        font-size: 1.75rem;
+      }
+      
+      .btn {
+        font-size: 1rem;
+        padding: 0.875rem 1.5rem;
+      }
+
+      .header-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .header-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .logo-svg {
+        font-size: 2rem;
+      }
+
+      .logo {
+        font-size: 1.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 1rem;
+      }
+
+      .modal-header,
+      .modal-body {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title h1 {
+        font-size: 2rem;
+      }
+      
+      .omega-logo {
+        font-size: 2.5rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      .logo-svg {
+        font-size: 1.75rem;
+      }
+      
+      .utility-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="airdrop-container">
-    <div class="airdrop-title">Omega Airdrop Tool</div>
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-title">
+        <h1>
+          <span class="omega-logo">Ω</span>
+          Omega Airdrop
+        </h1>
+        <p class="hero-subtitle">Ω Token Distribution Platform</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="header-top">
+      <div class="logo-container">
+        <div class="logo">
+          <span class="logo-svg">Ω</span>
+          Omega Airdrop
+        </div>
+        <div class="logo-subtitle">Ω Token Distribution Platform</div>
+      </div>
+      <div class="header-controls">
+        <button class="utility-btn" id="how-to-btn">
+          <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+          </svg>
+          Guide
+        </button>
+        <button class="utility-btn" id="disclaimer-btn">
+          <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          Terms
+        </button>
+        <button class="theme-toggle" id="theme-toggle">
+          <svg class="icon sun-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+          </svg>
+          <svg class="icon moon-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <div class="stat-number" id="total-wallets">0</div>
+          <div class="stat-label">Recipients</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <div class="stat-number" id="total-amount">0</div>
+          <div class="stat-label">Total Amount</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⛽</div>
+        <div class="stat-content">
+          <div class="stat-number" id="estimated-gas">0</div>
+          <div class="stat-label">Est. Gas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-workspace">
+      <div class="workspace-left">
+        <div class="connection-panel">
+          <h3 class="panel-title">🔗 Connection</h3>
+          <div class="connection-toggle">
+            <button class="toggle-btn active" id="wallet-toggle">
+              <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
+              </svg>
+              Wallet
+            </button>
+            <button class="toggle-btn" id="private-key-toggle">
+              <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+              </svg>
+              Private Key
+            </button>
+          </div>
+
+          <div class="wallet-info" id="wallet-info" style="display: none;">
+            <div class="wallet-status" id="wallet-status">Not connected to wallet</div>
+            <button class="btn btn-connect" id="connect-wallet">
+              <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/>
+              </svg>
+              Connect Wallet
+            </button>
+          </div>
+
+          <div class="private-key-info" id="private-key-info" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="private-key-input">Private Key (without 0x prefix)</label>
+              <input class="form-input" id="private-key-input" type="password" placeholder="Enter your private key securely..." autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <div class="token-panel">
+          <h3 class="panel-title">🪙 Token Details</h3>
+          <div class="form-group">
+            <label class="form-label" for="token-address">ERC-20 Token Contract Address</label>
+            <input class="form-input" id="token-address" type="text" placeholder="0x..." autocomplete="off" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="airdrop-amount">Amount per Wallet</label>
+            <input class="form-input" id="airdrop-amount" type="number" min="0" step="0.000001" placeholder="Amount (e.g. 100)" />
+          </div>
+
+          <div class="balance-info" id="balance-info">
+            <div class="balance-item">
+              <span class="balance-label">Token Balance:</span>
+              <span class="balance-value" id="token-balance">Loading...</span>
+            </div>
+            <div class="balance-item">
+              <span class="balance-label">Token Symbol:</span>
+              <span class="balance-value" id="token-symbol">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-right">
+        <div class="recipients-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">📋 Recipient Addresses</h3>
+            <div class="panel-actions">
+              <button class="action-btn" id="clear-btn" title="Clear all addresses">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                Clear
+              </button>
+              <button class="action-btn" id="validate-btn" title="Validate addresses">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                Validate
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="wallets">Wallet Addresses</label>
+            <textarea class="form-textarea" id="wallets" placeholder="Enter wallet addresses (one per line or comma-separated)&#10;0x123...&#10;0x456...&#10;... or 0x123...,0x456..." autocomplete="off"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Or Upload CSV File</label>
+            <div class="file-upload">
+              <input type="file" id="csv-upload" accept=".csv,text/csv" />
+              <label for="csv-upload" class="file-upload-label">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                Choose CSV file or drag and drop
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="execution-panel">
+          <button class="btn btn-execute" id="airdrop-btn" disabled>
+            <span>
+              <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+              </svg>
+              Launch Airdrop
+            </span>
+          </button>
+
+          <div class="airdrop-status" id="airdrop-status"></div>
+          
+          <div class="progress-container" id="progress-container">
+            <div class="progress-bar" id="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Preparing airdrop...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     
     <div class="connection-toggle">
-      <button class="toggle-btn active" id="wallet-toggle">Wallet Connection</button>
-      <button class="toggle-btn" id="private-key-toggle">Private Key</button>
+      <button class="toggle-btn active" id="wallet-toggle">
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
+        </svg>
+        Wallet Connection
+      </button>
+      <button class="toggle-btn" id="private-key-toggle">
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+        </svg>
+        Private Key
+      </button>
     </div>
 
     <div class="wallet-info" id="wallet-info" style="display: none;">
-      <div id="wallet-status">Not connected</div>
-      <button class="airdrop-btn" id="connect-wallet" style="margin-top: 0.5rem;">Connect Wallet</button>
+      <div class="wallet-status" id="wallet-status">Not connected to wallet</div>
+      <button class="btn btn-secondary" id="connect-wallet">
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/>
+        </svg>
+        Connect Wallet
+      </button>
     </div>
 
     <div class="private-key-info" id="private-key-info" style="display: none;">
-      <label class="airdrop-label" for="private-key-input">Private Key (without 0x prefix)</label>
-      <input class="airdrop-input" id="private-key-input" type="password" placeholder="Enter your private key..." autocomplete="off" />
+      <div class="form-group">
+        <label class="form-label" for="private-key-input">Private Key (without 0x prefix)</label>
+        <input class="form-input" id="private-key-input" type="password" placeholder="Enter your private key securely..." autocomplete="off" />
+      </div>
     </div>
 
     <div class="balance-info" id="balance-info">
-      <div id="token-balance">Token Balance: Loading...</div>
-      <div id="token-symbol">Symbol: -</div>
+      <div class="balance-item">
+        <span class="balance-label">Token Balance:</span>
+        <span class="balance-value" id="token-balance">Loading...</span>
+      </div>
+      <div class="balance-item">
+        <span class="balance-label">Token Symbol:</span>
+        <span class="balance-value" id="token-symbol">-</span>
+      </div>
     </div>
 
-    <label class="airdrop-label" for="token-address">ERC-20 Token Contract Address</label>
-    <input class="airdrop-input" id="token-address" type="text" placeholder="0x..." autocomplete="off" />
-
-    <label class="airdrop-label" for="airdrop-amount">Amount per Wallet</label>
-    <input class="airdrop-input" id="airdrop-amount" type="number" min="0" step="0.000001" placeholder="Amount (e.g. 100)" />
-
-    <label class="airdrop-label" for="wallets">Paste Wallet Addresses (one per line or comma-separated)</label>
-    <textarea class="airdrop-textarea" id="wallets" placeholder="0x123...\n0x456...\n... or 0x123...,0x456..." autocomplete="off"></textarea>
-
-    <div class="airdrop-upload">
-      <label class="airdrop-label" for="csv-upload">Or Upload CSV</label>
-      <input type="file" id="csv-upload" accept=".csv,text/csv" />
+    <div class="form-group">
+      <label class="form-label" for="token-address">ERC-20 Token Contract Address</label>
+      <input class="form-input" id="token-address" type="text" placeholder="0x..." autocomplete="off" />
     </div>
 
-    <button class="airdrop-btn" id="airdrop-btn" disabled>Start Airdrop</button>
+    <div class="form-group">
+      <label class="form-label" for="airdrop-amount">Amount per Wallet</label>
+      <input class="form-input" id="airdrop-amount" type="number" min="0" step="0.000001" placeholder="Amount (e.g. 100)" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="wallets">Wallet Addresses</label>
+      <textarea class="form-textarea" id="wallets" placeholder="Enter wallet addresses (one per line or comma-separated)&#10;0x123...&#10;0x456...&#10;... or 0x123...,0x456..." autocomplete="off"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Or Upload CSV File</label>
+      <div class="file-upload">
+        <input type="file" id="csv-upload" accept=".csv,text/csv" />
+        <label for="csv-upload" class="file-upload-label">
+          <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+          Choose CSV file or drag and drop
+        </label>
+      </div>
+    </div>
+
+    <button class="btn" id="airdrop-btn" disabled>
+      <span>
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+        </svg>
+        Start Airdrop
+      </span>
+    </button>
+
     <div class="airdrop-status" id="airdrop-status"></div>
-    <div class="progress-bar" id="progress-bar" style="display: none;">
-      <div class="progress-fill" id="progress-fill"></div>
+    
+    <div class="progress-container" id="progress-container">
+      <div class="progress-bar" id="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-text" id="progress-text">Preparing airdrop...</div>
     </div>
   </div>
-  <div class="footer">&copy; 2025 Omega DeFi • Airdrop Tool</div>
+
+  <!-- How to Use Modal -->
+  <div class="modal" id="how-to-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>How to Use Omega Airdrop Tool</h3>
+        <button class="modal-close" id="how-to-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Connect Your Wallet</h4>
+            <p>Choose between MetaMask wallet connection or private key input. Ensure you have sufficient tokens for distribution.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Enter Token Details</h4>
+            <p>Provide the ERC-20 token contract address and the amount you want to send to each wallet.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Add Recipient Addresses</h4>
+            <p>Enter wallet addresses manually (one per line or comma-separated) or upload a CSV file with addresses.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Execute Airdrop</h4>
+            <p>Review all details carefully, then click "Start Airdrop" to begin the distribution process.</p>
+          </div>
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ Important:</strong> Always double-check addresses and amounts before confirming transactions.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer Modal -->
+  <div class="modal" id="disclaimer-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Disclaimer & Terms of Use</h3>
+        <button class="modal-close" id="disclaimer-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="disclaimer-section">
+          <h4>⚠️ User Responsibility</h4>
+          <p>Users are solely responsible for verifying all transaction details including:</p>
+          <ul>
+            <li>Correct wallet addresses</li>
+            <li>Proper network selection</li>
+            <li>Accurate token amounts</li>
+            <li>Sufficient gas fees</li>
+          </ul>
+        </div>
+        <div class="disclaimer-section">
+          <h4>🔒 Omega Network Liability</h4>
+          <p>Omega Network has no control over user transactions and assumes no responsibility for:</p>
+          <ul>
+            <li>Tokens sent to incorrect addresses</li>
+            <li>Transactions on wrong networks</li>
+            <li>Loss of funds due to user error</li>
+            <li>Smart contract vulnerabilities</li>
+          </ul>
+        </div>
+        <div class="disclaimer-section">
+          <h4>✅ Best Practices</h4>
+          <ul>
+            <li>Always test with small amounts first</li>
+            <li>Verify addresses using block explorers</li>
+            <li>Ensure you're on the correct network</li>
+            <li>Keep private keys secure and never share them</li>
+          </ul>
+        </div>
+        <div class="disclaimer-footer">
+          <p><strong>By using this tool, you acknowledge and accept these terms.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2025 <a href="https://omeganetwork.co" target="_blank">Omega Network</a> • DeFi Airdrop Tool</p>
+    <p>Built with ❤️ for the decentralized future</p>
+  </div>
+
   <script>
     let provider, signer, walletAddress;
     let connectionMethod = 'wallet';
@@ -227,11 +1981,39 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Check if ethers loaded properly
       if (typeof ethers === 'undefined') {
-        alert('Error: ethers.js library failed to load. Please refresh the page or check your internet connection.');
+        showStatus('Error: ethers.js library failed to load. Please refresh the page or check your internet connection.', 'error');
         return;
       }
       
-      // Don't auto-connect - let user choose method first
+      // Initialize UI
+      updateAirdropButton();
+      
+      // Initialize theme
+      initTheme();
+      
+      // Theme toggle
+      document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+      
+      // Modal controls
+      document.getElementById('how-to-btn').addEventListener('click', () => showModal('how-to-modal'));
+      document.getElementById('disclaimer-btn').addEventListener('click', () => showModal('disclaimer-modal'));
+      
+      document.getElementById('how-to-close').addEventListener('click', () => hideModal('how-to-modal'));
+      document.getElementById('disclaimer-close').addEventListener('click', () => hideModal('disclaimer-modal'));
+      
+      // Close modal on outside click
+      document.addEventListener('click', closeModalOnOutsideClick);
+      
+      // Close modal on escape key
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          const modals = document.querySelectorAll('.modal.show');
+          modals.forEach(modal => {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+          });
+        }
+      });
     });
 
     // Toggle between wallet connection and private key
@@ -265,6 +2047,7 @@
           walletAddress = await signer.getAddress();
           
           document.getElementById('wallet-status').textContent = `Connected: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`;
+          document.getElementById('wallet-status').style.borderLeftColor = '#10b981';
           document.getElementById('connect-wallet').textContent = 'Connected';
           document.getElementById('connect-wallet').disabled = true;
           
@@ -281,11 +2064,11 @@
           
           updateAirdropButton();
         } else {
-          alert('Please install MetaMask!');
+          showStatus('Please install MetaMask to use wallet connection!', 'error');
         }
       } catch (error) {
         console.error('Error connecting wallet:', error);
-        alert('Failed to connect wallet: ' + error.message);
+        showStatus('Failed to connect wallet: ' + error.message, 'error');
       }
     }
 
@@ -293,7 +2076,8 @@
       provider = null;
       signer = null;
       walletAddress = null;
-      document.getElementById('wallet-status').textContent = 'Not connected';
+      document.getElementById('wallet-status').textContent = 'Not connected to wallet';
+      document.getElementById('wallet-status').style.borderLeftColor = '#ef4444';
       document.getElementById('connect-wallet').textContent = 'Connect Wallet';
       document.getElementById('connect-wallet').disabled = false;
       document.getElementById('balance-info').classList.remove('show');
@@ -333,18 +2117,18 @@
         if (connectionMethod === 'wallet' && walletAddress) {
           const balance = await tokenContract.balanceOf(walletAddress);
           const balanceFormatted = ethers.utils.formatUnits(balance, tokenDecimals);
-          document.getElementById('token-balance').textContent = `Token Balance: ${balanceFormatted} ${tokenSymbol}`;
+          document.getElementById('token-balance').textContent = `${balanceFormatted} ${tokenSymbol}`;
         } else if (connectionMethod === 'private-key') {
           const privateKey = document.getElementById('private-key-input').value.trim();
           if (privateKey) {
             const wallet = new ethers.Wallet(privateKey, contractProvider);
             const balance = await tokenContract.balanceOf(wallet.address);
             const balanceFormatted = ethers.utils.formatUnits(balance, tokenDecimals);
-            document.getElementById('token-balance').textContent = `Token Balance: ${balanceFormatted} ${tokenSymbol}`;
+            document.getElementById('token-balance').textContent = `${balanceFormatted} ${tokenSymbol}`;
           }
         }
         
-        document.getElementById('token-symbol').textContent = `Symbol: ${tokenSymbol}`;
+        document.getElementById('token-symbol').textContent = tokenSymbol;
         document.getElementById('balance-info').classList.add('show');
       } catch (error) {
         console.error('Error checking token balance:', error);
@@ -388,8 +2172,14 @@
     }
 
     // Add event listeners for real-time validation
-    document.getElementById('airdrop-amount').addEventListener('input', updateAirdropButton);
-    document.getElementById('wallets').addEventListener('input', updateAirdropButton);
+    document.getElementById('airdrop-amount').addEventListener('input', function() {
+      updateAirdropButton();
+      updateStats();
+    });
+    document.getElementById('wallets').addEventListener('input', function() {
+      updateAirdropButton();
+      updateStats();
+    });
     document.getElementById('private-key-input').addEventListener('input', function() {
       updateAirdropButton();
       // Check balance when private key is entered
@@ -398,6 +2188,43 @@
         checkTokenBalance(tokenAddress);
       }
     });
+
+    // New interactive features
+    document.getElementById('clear-btn').addEventListener('click', function() {
+      document.getElementById('wallets').value = '';
+      updateAirdropButton();
+      updateStats();
+      showStatus('All addresses cleared', 'info');
+    });
+
+    document.getElementById('validate-btn').addEventListener('click', function() {
+      const wallets = parseWallets(document.getElementById('wallets').value);
+      if (wallets.length === 0) {
+        showStatus('No addresses to validate', 'error');
+        return;
+      }
+      
+      const validWallets = wallets.filter(wallet => isValidAddress(wallet));
+      const invalidCount = wallets.length - validWallets.length;
+      
+      if (invalidCount === 0) {
+        showStatus(`✅ All ${wallets.length} addresses are valid`, 'success');
+      } else {
+        showStatus(`⚠️ ${invalidCount} invalid addresses found. ${validWallets.length} valid addresses remain.`, 'warning');
+      }
+    });
+
+    // Update stats function
+    function updateStats() {
+      const wallets = parseWallets(document.getElementById('wallets').value);
+      const amount = parseFloat(document.getElementById('airdrop-amount').value) || 0;
+      const totalAmount = wallets.length * amount;
+      const estimatedGas = wallets.length * 0.0001; // Rough estimate
+
+      document.getElementById('total-wallets').textContent = wallets.length;
+      document.getElementById('total-amount').textContent = totalAmount.toFixed(6);
+      document.getElementById('estimated-gas').textContent = estimatedGas.toFixed(4);
+    }
 
     // Validate Ethereum address
     function isValidAddress(addr) {
@@ -409,49 +2236,53 @@
       return raw.split(/[\s,]+/).map(a => a.trim()).filter(a => isValidAddress(a));
     }
 
+    // Show status with proper styling
+    function showStatus(message, type = 'info') {
+      const statusDiv = document.getElementById('airdrop-status');
+      statusDiv.textContent = message;
+      statusDiv.className = `airdrop-status status-${type}`;
+    }
+
     document.getElementById('airdrop-btn').onclick = async function() {
       const token = document.getElementById('token-address').value.trim();
       const amount = document.getElementById('airdrop-amount').value.trim();
       const rawWallets = document.getElementById('wallets').value;
-      const statusDiv = document.getElementById('airdrop-status');
+      const progressContainer = document.getElementById('progress-container');
       const progressBar = document.getElementById('progress-bar');
       const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
       
-      statusDiv.textContent = '';
-      progressBar.style.display = 'none';
+      showStatus('');
+      progressContainer.style.display = 'none';
       
       if (!isValidAddress(token)) {
-        statusDiv.textContent = 'Invalid token contract address.';
-        statusDiv.style.color = '#c00';
+        showStatus('Invalid token contract address.', 'error');
         return;
       }
       
       if (!amount || isNaN(amount) || Number(amount) <= 0) {
-        statusDiv.textContent = 'Enter a valid amount.';
-        statusDiv.style.color = '#c00';
+        showStatus('Enter a valid amount.', 'error');
         return;
       }
       
       const wallets = parseWallets(rawWallets);
       if (wallets.length === 0) {
-        statusDiv.textContent = 'No valid wallet addresses found.';
-        statusDiv.style.color = '#c00';
+        showStatus('No valid wallet addresses found.', 'error');
         return;
       }
 
       if (connectionMethod === 'wallet') {
         if (!provider || !signer) {
-          statusDiv.textContent = 'Please connect your wallet first.';
-          statusDiv.style.color = '#c00';
+          showStatus('Please connect your wallet first.', 'error');
           return;
         }
-        await executeWalletAirdrop(token, amount, wallets, statusDiv, progressBar, progressFill);
+        await executeWalletAirdrop(token, amount, wallets, progressContainer, progressBar, progressFill, progressText);
       } else {
-        await executePrivateKeyAirdrop(token, amount, wallets, statusDiv, progressBar, progressFill);
+        await executePrivateKeyAirdrop(token, amount, wallets, progressContainer, progressBar, progressFill, progressText);
       }
     };
 
-    async function executeWalletAirdrop(tokenAddress, amount, wallets, statusDiv, progressBar, progressFill) {
+    async function executeWalletAirdrop(tokenAddress, amount, wallets, progressContainer, progressBar, progressFill, progressText) {
       try {
         const contract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
         const decimals = await contract.decimals();
@@ -463,14 +2294,12 @@
         const totalNeeded = amountWei.mul(wallets.length);
         
         if (balance.lt(totalNeeded)) {
-          statusDiv.textContent = `Insufficient balance. Need ${ethers.utils.formatUnits(totalNeeded, decimals)} ${symbol}, have ${ethers.utils.formatUnits(balance, decimals)} ${symbol}`;
-          statusDiv.style.color = '#c00';
+          showStatus(`Insufficient balance. Need ${ethers.utils.formatUnits(totalNeeded, decimals)} ${symbol}, have ${ethers.utils.formatUnits(balance, decimals)} ${symbol}`, 'error');
           return;
         }
         
-        statusDiv.textContent = `Starting airdrop of ${amount} ${symbol} to ${wallets.length} wallets...`;
-        statusDiv.style.color = '#1ca64c';
-        progressBar.style.display = 'block';
+        showStatus(`Starting airdrop of ${amount} ${symbol} to ${wallets.length} wallets...`, 'info');
+        progressContainer.style.display = 'block';
         
         let successCount = 0;
         let failCount = 0;
@@ -478,7 +2307,7 @@
         for (let i = 0; i < wallets.length; i++) {
           try {
             const tx = await contract.transfer(wallets[i], amountWei);
-            statusDiv.textContent = `Sending to ${wallets[i].substring(0, 6)}... (${i + 1}/${wallets.length})`;
+            progressText.textContent = `Sending to ${wallets[i].substring(0, 6)}... (${i + 1}/${wallets.length})`;
             await tx.wait();
             successCount++;
             progressFill.style.width = `${((i + 1) / wallets.length) * 100}%`;
@@ -488,20 +2317,17 @@
           }
         }
         
-        statusDiv.textContent = `Airdrop complete! ${successCount} successful, ${failCount} failed.`;
-        statusDiv.style.color = '#1ca64c';
+        showStatus(`Airdrop complete! ${successCount} successful, ${failCount} failed.`, 'success');
         
       } catch (error) {
-        statusDiv.textContent = `Error: ${error.message}`;
-        statusDiv.style.color = '#c00';
+        showStatus(`Error: ${error.message}`, 'error');
       }
     }
 
-    async function executePrivateKeyAirdrop(tokenAddress, amount, wallets, statusDiv, progressBar, progressFill) {
+    async function executePrivateKeyAirdrop(tokenAddress, amount, wallets, progressContainer, progressBar, progressFill, progressText) {
       const privateKey = document.getElementById('private-key-input').value.trim();
       if (!privateKey) {
-        statusDiv.textContent = 'Private key required.';
-        statusDiv.style.color = '#c00';
+        showStatus('Private key required.', 'error');
         return;
       }
       
@@ -519,14 +2345,12 @@
         const totalNeeded = amountWei.mul(wallets.length);
         
         if (balance.lt(totalNeeded)) {
-          statusDiv.textContent = `Insufficient balance. Need ${ethers.utils.formatUnits(totalNeeded, decimals)} ${symbol}, have ${ethers.utils.formatUnits(balance, decimals)} ${symbol}`;
-          statusDiv.style.color = '#c00';
+          showStatus(`Insufficient balance. Need ${ethers.utils.formatUnits(totalNeeded, decimals)} ${symbol}, have ${ethers.utils.formatUnits(balance, decimals)} ${symbol}`, 'error');
           return;
         }
         
-        statusDiv.textContent = `Starting airdrop of ${amount} ${symbol} to ${wallets.length} wallets...`;
-        statusDiv.style.color = '#1ca64c';
-        progressBar.style.display = 'block';
+        showStatus(`Starting airdrop of ${amount} ${symbol} to ${wallets.length} wallets...`, 'info');
+        progressContainer.style.display = 'block';
         
         let successCount = 0;
         let failCount = 0;
@@ -534,7 +2358,7 @@
         for (let i = 0; i < wallets.length; i++) {
           try {
             const tx = await contract.transfer(wallets[i], amountWei);
-            statusDiv.textContent = `Sending to ${wallets[i].substring(0, 6)}... (${i + 1}/${wallets.length})`;
+            progressText.textContent = `Sending to ${wallets[i].substring(0, 6)}... (${i + 1}/${wallets.length})`;
             await tx.wait();
             successCount++;
             progressFill.style.width = `${((i + 1) / wallets.length) * 100}%`;
@@ -544,14 +2368,63 @@
           }
         }
         
-        statusDiv.textContent = `Airdrop complete! ${successCount} successful, ${failCount} failed.`;
-        statusDiv.style.color = '#1ca64c';
+        showStatus(`Airdrop complete! ${successCount} successful, ${failCount} failed.`, 'success');
         
       } catch (error) {
-        statusDiv.textContent = `Error: ${error.message}`;
-        statusDiv.style.color = '#c00';
+        showStatus(`Error: ${error.message}`, 'error');
       }
     }
+
+    // Theme Toggle Functionality
+    function initTheme() {
+      const savedTheme = localStorage.getItem('omega-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('omega-theme', newTheme);
+      updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(theme) {
+      const sunIcon = document.querySelector('.sun-icon');
+      const moonIcon = document.querySelector('.moon-icon');
+      
+      if (theme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+    }
+
+    // Modal Functionality
+    function showModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
+
+    function closeModalOnOutsideClick(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('show');
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+
   </script>
 </body>
 </html> 
